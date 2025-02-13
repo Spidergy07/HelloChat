@@ -507,11 +507,13 @@
 
         function getUrlParams() {
             const params = new URLSearchParams(window.location.search);
+            const roleName = decodeURIComponent(params.get('roleName')) || 'ธุรกิจการเงิน';
+            
             return {
-                userName: params.get('userName') || 'Oppabank',
+                userName: decodeURIComponent(params.get('userName')) || 'Oppabank',
                 modelName: params.get('modelName') || 'Typhoon',
-                roleName: params.get('roleName') || 'General Assistant',
-                roleIcon: params.get('roleIcon') || '🤖',
+                roleName: roleName,
+                roleIcon: getRoleIcon(roleName),
                 language: params.get('language') || 'th',
                 primaryColor: params.get('primaryColor'),
                 accentColor: params.get('accentColor'),
@@ -692,7 +694,7 @@ How can I help you today?`;
             const chatHeader = document.querySelector('.chat-header');
             if (chatHeader) {
                 const icon = getRoleIcon(params.roleName);
-                chatHeader.innerHTML = `${icon} ${params.modelName} - ${params.roleName}`;
+                chatHeader.textContent = `${icon} ${params.modelName} - ${params.roleName}`;
             }
 
             // เพิ่ม welcome message
@@ -749,7 +751,7 @@ How can I help you today?`;
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${apiKey.replace(/['"]+/g, '').trim()}`
+                        'Authorization': `Bearer ${apiKey}`
                     },
                     body: JSON.stringify({
                         messages: [
@@ -763,8 +765,8 @@ How can I help you today?`;
                             }
                         ],
                         model: "typhoon-v1.5x-70b-instruct",
-                        temperature: 0.6,
-                        max_tokens: 512,
+                        temperature: 0.7,
+                        max_tokens: 1024,
                         top_p: 0.95,
                         repetition_penalty: 1.05,
                         stream: false
@@ -781,8 +783,8 @@ How can I help you today?`;
                 const botResponse = data.choices[0].message.content;
                 addMessage(botResponse, false);
             } catch (error) {
-                console.error('Error:', error);
-                addMessage(`ขออภัย: ${error.message}`, false);
+                console.error('API Error:', error);
+                addMessage(`ขออภัย: ไม่สามารถเชื่อมต่อกับ API ได้ กรุณาลองใหม่อีกครั้ง`, false);
             } finally {
                 loading.style.display = 'none';
             }
@@ -805,13 +807,16 @@ How can I help you today?`;
 
         function getRoleIcon(roleName) {
             const roleIcons = {
+                // ภาษาไทย
                 'ทั่วไป': '🤖',
-                'ธุรกิจ': '💰',
+                'ธุรกิจการเงิน': '💰',
                 'เชฟ': '👨‍🍳',
-                'ดูดวง': '🔮',
-                'ดนตรี': '🎵',
-                'คู่คุย': '🫂',
-                // English versions
+                'หมอดู': '🔮',
+                'ที่ปรึกษาด้านดนตรี': '🎵',
+                'คู่สนทนาเสมือน': '🫂',
+                'ผู้ช่วยทั่วไป': '🤖',
+                
+                // English
                 'General Assistant': '🤖',
                 'Business & Finance': '💰',
                 'Chef': '👨‍🍳',
@@ -819,7 +824,9 @@ How can I help you today?`;
                 'Music Advisor': '🎵',
                 'Virtual Partner': '🫂'
             };
-            return roleIcons[roleName] || '��';
+
+            // ถ้าไม่เจอ role ที่ตรงกัน ให้ใช้ default icon
+            return roleIcons[roleName] || '🤖';
         }
 
         // เพิ่มฟังก์ชัน getRolePrompt ก่อนฟังก์ชัน sendMessage

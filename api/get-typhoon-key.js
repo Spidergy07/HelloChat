@@ -21,11 +21,11 @@ export default function handler(req, res) {
 
     // ตรวจสอบว่ามี API key และ format ถูกต้อง
     const apiKey = process.env.TYPHOON_API_KEY;
-    if (!apiKey || typeof apiKey !== 'string') {
+    if (!apiKey || typeof apiKey !== 'string' || !apiKey.startsWith('sk-')) {
         return res.status(500).json({ error: 'Invalid API key configuration' });
     }
 
     return res.status(200).json({ 
-        key: apiKey.trim() // ทำให้แน่ใจว่าไม่มี whitespace
+        key: apiKey.trim()
     });
 } 
