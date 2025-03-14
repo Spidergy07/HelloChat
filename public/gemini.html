@@ -104,6 +104,45 @@
             text-align: center;
             font-size: 1.5rem;
             font-weight: 600;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Back Button */
+        .back-button {
+            position: absolute;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        .back-button:active {
+            transform: scale(0.95);
+        }
+
+        @media (max-width: 768px) {
+            .back-button {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
         }
 
         /* Messages Area */
@@ -223,7 +262,9 @@
 <body>
     <div class="chat-container">
         <div class="chat-header">
-            <i class="fas fa-robot"></i>
+            <button class="back-button" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
             <span id="model-name"></span> - <span id="role-name"></span>
         </div>
         <div class="chat-messages" id="chat-messages"></div>
@@ -796,6 +837,11 @@ ${duties.map(duty => `• ${duty}`).join('\n')}
                 accentColor: params.get('accentColor'),
                 backgroundGradient: params.get('backgroundGradient')
             };
+        }
+
+        // Add back button function
+        function goBack() {
+            window.location.href = '/';
         }
 
         // เพิ่มฟังก์ชันตรวจสอบ API Key
