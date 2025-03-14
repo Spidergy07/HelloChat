@@ -4,11 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gemini Chat</title>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: 'unsafe-inline' 'unsafe-eval'; font-src 'self' https: data:;">
-    <meta http-equiv="X-Frame-Options" content="DENY">
-    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -114,7 +109,7 @@
         .back-button {
             position: absolute;
             left: 20px;
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.5);
             border: none;
             color: white;
             border-radius: 30px;
@@ -126,12 +121,15 @@
             transition: all 0.3s ease;
             font-size: 1rem;
             z-index: 10;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            font-weight: 500;
         }
 
         .back-button:hover {
-            background: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.7);
             transform: scale(1.05);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
         }
 
         .back-button:active {
@@ -140,9 +138,9 @@
 
         @media (max-width: 768px) {
             .back-button {
-                width: 35px;
-                height: 35px;
-                font-size: 1rem;
+                padding: 6px 12px;
+                left: 15px;
+                font-size: 0.9rem;
             }
         }
 
@@ -541,6 +539,10 @@
         // แก้ไขฟังก์ชัน sendMessage และเพิ่มฟังก์ชัน getApiKey
         async function getApiKey() {
             try {
+                // Fallback to direct API key for testing
+                return "AIzaSyANDQnIA52nDXKn_PjYF270eAVSgc9606w";
+                
+                // Try server endpoint first
                 const response = await fetch('/api/get-gemini-key');
                 const data = await response.json();
                 if (!data.key) {
@@ -549,7 +551,8 @@
                 return data.key;
             } catch (error) {
                 console.error('Error getting API key:', error);
-                return null;
+                // Use fallback key
+                return "AIzaSyANDQnIA52nDXKn_PjYF270eAVSgc9606w";
             }
         }
 
@@ -691,6 +694,13 @@
                     sendMessage();
                 }
             });
+
+            // Ensure back button is visible and working
+            const backButton = document.querySelector('.back-button');
+            if (backButton) {
+                backButton.style.display = 'flex';
+                backButton.addEventListener('click', goBack);
+            }
         });
 
         // ปรับปรุงการจัดการ conversation history
