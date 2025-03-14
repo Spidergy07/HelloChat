@@ -66,10 +66,10 @@ const Chat = () => {
       <div className="bg-white/10 backdrop-blur-lg p-4 flex items-center gap-4 sticky top-0 z-10">
         <button
           onClick={handleBack}
-          className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors flex items-center gap-2 text-white hover:scale-105 active:scale-95"
+          className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors flex items-center gap-2 text-white hover:scale-105 active:scale-95 shadow-md"
         >
           <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
-          <span className="hidden sm:inline">กลับ</span>
+          <span className="sm:inline text-sm sm:text-base font-medium">กลับหน้าหลัก</span>
         </button>
         <div className="flex items-center gap-2 flex-1">
           <span className="text-xl sm:text-2xl">{params.roleIcon}</span>
